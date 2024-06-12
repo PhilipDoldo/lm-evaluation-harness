@@ -1,0 +1,7 @@
+dataset_path: emozilla/proofpile-test-tokenized
+dataset_name: "default"
+dataset_kwargs: null
+training_split: null
+validation_split: null
+test_split: "test"
+fewshot_split: null
