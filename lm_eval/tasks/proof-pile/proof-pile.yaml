@@ -1,13 +1,17 @@
-task: proof-pile # seems reasonable to call it this
-dataset_path: emozilla/proofpile-test-tokenized # https://huggingface.co/datasets/emozilla/proofpile-test-tokenized
-dataset_name: "default" # if you print datasets.get_dataset_config_names("emozilla/proofpile-test-tokenized"), then you'll see "default" is the only option
-dataset_kwargs: null # no extra arguments are needed to load this dataset
-output_type: loglikelihood_rolling # This is what makes the perplexity metric use a sliding window
-training_split: null # only "test" exists
-validation_split: null # only "test" exists
-test_split: "test" # if you print datasets.get_dataset_split_names("emozilla/proofpile-test-tokenized"), then you'll see "test" is the only option
-fewshot_split: null # this seems irrelevant for a perplexity evaluation, wikitext and pile_10k both don't set this either
-doc_to_text: "" # I think this is what you always do when using perplexity since the "target" just comes from the inputted text anyway and both wikitext and pile_10k do this
-doc_to_target: "text" # easy to tell that this is the correct entry from the dataset card https://huggingface.co/datasets/emozilla/proofpile-test-tokenized
+task: proof-pile
+dataset_path: hoskinson-center/proof-pile # https://huggingface.co/datasets/hoskinson-center/proof-pile
+dataset_name: "default" # if you print datasets.get_dataset_config_names("hoskinson-center/proof-pile"), then you'll see "default" is the only option
+output_type: loglikelihood_rolling
+test_split: "test" 
+doc_to_text: "" # P(continuation | context) -- doc_to_text is the context and doc_to_target is the continuation
+doc_to_target: "{{text}}"
+#doc_to_decontamination_query: "{{text}}"
 metric_list:
-  - metric: perplexity # this and the output_type should result in a sliding-window perplexity evaluation
+  - metric: word_perplexity
+  - metric: byte_perplexity
+  - metric: bits_per_byte
+  #- metric: perplexity
+  #  aggregation: perplexity
+  #  higher_is_better: false
+dataset_kwargs:
+  trust_remote_code: true
